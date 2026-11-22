@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Магазин «Техника» — сетка на grid</title>
+<style>
+/* ===== Базовые стили ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #faf2f6;
+  color: #75003f;
+  line-height: 1.6;
+  padding: 16px;
+  
+  /* Делаем так, чтобы body занимал минимум весь экран */
+  min-height: 100vh;
+  display: grid; 
+  grid-template-rows: 1fr;
+}
+
+/* ===== Чек-лист 1: каркас страницы на grid-template-areas ===== */
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%; 
+  
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header  header"
+    "sidebar main"
+    "footer  footer";
+  gap: 16px;
+}
+
+.site-header {
+  grid-area: header;
+  background: #75003f;
+  color: #fff;
+  padding: 16px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.logo { font-size: 20px; font-weight: bold; color: #ed66ae; }
+.menu { display: flex; gap: 18px; flex-wrap: wrap; }
+.menu a { color: #fae4f5; }
+
+.sidebar {
+  grid-area: sidebar;
+  background: #fff;
+  padding: 18px;
+  /* Чек-лист 3.1: Осознанное выравнивание. 
+     Центрируем заголовок и фильтры по горизонтали для аккуратного вида. */
+  display: grid;
+  place-items: center;
+}
+.sidebar h2 {
+  font-size: 16px;
+  color: #ed3aa8;
+  margin-bottom: 12px;
+  text-align: center; /* Для текста внутри блока */
+}
+.filters { 
+  list-style: none; 
+  text-align: center;
+}
+.filters li { margin-bottom: 8px; }
+
+.main {
+  grid-area: main;
+  background: #fff;
+  padding: 18px;
+}
+.main h1 {
+  font-size: 22px;
+  color: #ed3ab7;
+  margin-bottom: 16px;
+}
+
+.site-footer {
+  grid-area: footer;
+  background: #75003f;
+  color: #ed66ae;
+  padding: 14px 22px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+}
+
+/* ===== Чек-лист 2: сетка карточек ===== */
+.catalog {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px; 
+}
+
+.card {
+  border: 1px solid #eed3e6;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #fff;
+}
+.card h3 { font-size: 16px; color: #75003f; }
+.card p { font-size: 14px; color: #663a54; flex-grow: 1; }
+
+/* Чек-лист 2.2: Featured-элемент растягивается на 2 колонки */
+.card-featured {
+  grid-column: span 2; 
+  border: 2px solid #ed3aa2;
+}
+
+.card-img {
+  height: 120px;
+  background: #fae4f1;
+  color: #b82174;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.card-img--featured {
+  height: 160px;
+  background: #fc84c6;
+  color: #75003f;
+}
+
+/* Flex используется только для мелких элементов внутри карточки (цена и кнопка) */
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.price { font-weight: bold; color: #ed3ab1; }
+.btn {
+  background: #ed3a8e;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn:hover { background: #d92880; }
+
+/* ===== Мобильная версия ===== */
+@media (max-width: 768px) {
+  .page {
+    grid-template-columns: 1fr;
+    /* Дополнительный балл: 
+       На мобильном фильтры подняты над каталогом (sidebar перед main),
+       чтобы пользователю было удобнее сначала выбрать категорию товара. */
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main"
+      "footer";
+  }
+
+  /* Чек-лист 2.2: отключаем растягивание на узком экране */
+  .card-featured { 
+    grid-column: auto; 
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="site-header">
+    <div class="logo">Техника</div>
+    <nav class="menu">
+      <a href="#">Каталог</a>
+      <a href="#">Доставка</a>
+      <a href="#">Гарантия</a>
+      <a href="#">Контакты</a>
+    </nav>
+  </header>
+
+  <aside class="sidebar">
+    <div>
+      <h2>Фильтры</h2>
+      <ul class="filters">
+        <li><a href="#">Все товары</a></li>
+        <li><a href="#">Смартфоны</a></li>
+        <li><a href="#">Ноутбуки</a></li>
+        <li><a href="#">Наушники</a></li>
+        <li><a href="#">Планшеты</a></li>
+        <li><a href="#">Аксессуары</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="main">
+    <h1>Каталог техники</h1>
+    <div class="catalog">
+
+      <!-- Первая карточка растянута -->
+      <article class="card card-featured">
+        <div class="card-img card-img--featured">Товар дня</div>
+        <h3>Смартфон Galaxy X</h3>
+        <p>Флагман с экраном 6.7", камерой 108 Мп и батареей 5000 мАч.</p>
+        <div class="card-row">
+          <span class="price">59 990 ₽</span>
+          <button class="btn">Купить</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-img">Смартфон</div>
+        <h3>Pixel 8</h3>
+        <p>Чистый Android и лучшая камера в классе.</p>
+        <div class="card-row">
+          <span class="price">49 990 ₽</span>
+          <button class="btn">Купить</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-img">Ноутбук</div>
+        <h3>MacBook Air</h3>
+        <p>Тонкий корпус, чип M3, 18 часов работы.</p>
+        <div class="card-row">
+          <span class="price">119 990 ₽</span>
+          <button class="btn">Купить</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-img">Наушники</div>
+        <h3>Sony WH-1000XM5</h3>
+        <p>Активное шумоподавление и 30 часов автономности.</p>
+        <div class="card-row">
+          <span class="price">34 990 ₽</span>
+          <button class="btn">Купить</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-img">Планшет</div>
+        <h3>iPad Air</h3>
+        <p>10.9", поддержка Apple Pencil, чип M1.</p>
+        <div class="card-row">
+          <span class="price">64 990 ₽</span>
+          <button class="btn">Купить</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-img">Часы</div>
+        <h3>Apple Watch SE</h3>
+        <p>Здоровье, спорт и уведомления на запястье.</p>
+        <div class="card-row">
+          <span class="price">24 990 ₽</span>
+          <button class="btn">Купить</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-img">Аксессуар</div>
+        <h3>Power Bank 20000</h3>
+        <p>Быстрая зарядка 65 Вт, два порта USB-C.</p>
+        <div class="card-row">
+          <span class="price">4 990 ₽</span>
+          <button class="btn">Купить</button>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>© 2026 Магазин «Техника»</span>
+    <span>support@tehnika.example · +7 (900) 000-00-00</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
